@@ -18,6 +18,7 @@ enum
     MAX_MODULES         = 1024,
     MAX_PARAMS          = 16,
     MAX_BLOCK_NESTING   = 100,
+    MAX_TYPE_NESTING    = 100,
     MAX_GOTOS           = 100,
 };
 

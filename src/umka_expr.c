@@ -965,7 +965,7 @@ static void parseBuiltinNewCall(Umka *umka, const Type **type, Const *constant)
         umka->error.handler(umka->error.context, "Function is not allowed in constant expressions");
 
     // Type
-    *type = parseType(umka, NULL);
+    *type = parseType(umka);
     typeAssertCompatibleBuiltin(&umka->types, *type, BUILTIN_NEW, (*type)->kind != TYPE_VOID && (*type)->kind != TYPE_NULL);
 
     genCallTypedBuiltin(&umka->gen, *type, BUILTIN_NEW);
@@ -995,7 +995,7 @@ static void parseBuiltinMakeCall(Umka *umka, const Type **type, Const *constant)
     if (constant)
         umka->error.handler(umka->error.context, "Function is not allowed in constant expressions");
 
-    *type = parseType(umka, NULL);
+    *type = parseType(umka);
     typeAssertCompatibleBuiltin(&umka->types, *type, BUILTIN_MAKE, (*type)->kind == TYPE_DYNARRAY || (*type)->kind == TYPE_MAP || (*type)->kind == TYPE_FIBER);
 
     if ((*type)->kind == TYPE_DYNARRAY)
@@ -1494,7 +1494,7 @@ static void parseBuiltinSelfTypeEqCall(Umka *umka, const Type **type, Const *con
 // fn typeptr(T): ^void
 static void parseBuiltinTypePtrCall(Umka *umka, const Type **type, Const *constant)
 {
-    *type = parseType(umka, NULL);
+    *type = parseType(umka);
     typeAssertCompatibleBuiltin(&umka->types, *type, BUILTIN_TYPEPTR, (*type)->kind != TYPE_VOID && (*type)->kind != TYPE_NULL);
 
     if (constant)
@@ -2423,9 +2423,13 @@ static void parseTypeCastOrCompositeLiteralOrEnumConst(Umka *umka, const Ident *
     {
         // No type to parse - use the inferred type instead, i.e., the type specified as an initial value to the type parameter of parseExpr() or parseExprList()
     }
+    else if (ident)
+    {
+        *type = parseTypeIdent(umka, ident);
+    }
     else
     {
-        *type = parseType(umka, ident);
+        *type = parseType(umka);
     }
 
     if (umka->lex.tok.kind == TOK_LPAR)
