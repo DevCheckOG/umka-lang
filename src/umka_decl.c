@@ -525,7 +525,7 @@ const Type *parseTypeIdent(Umka *umka, const Ident *ident)
 
 static const Type *parseTypeRecursive(Umka *umka, int depth)
 {
-    if (depth > MAX_TYPE_NESTING)
+    if (depth >= MAX_TYPE_NESTING)
         umka->error.handler(umka->error.context, "Type nesting is too deep");
 
     switch (umka->lex.tok.kind)

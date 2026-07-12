@@ -3084,6 +3084,9 @@ static void parseLogicalExpr(Umka *umka, const Type **type, Const *constant)
 // expr = logicalExpr ["?" expr ":" expr].
 void parseExpr(Umka *umka, const Type **type, Const *constant)
 {
+    if (umka->gen.exprNesting++ >= MAX_EXPR_NESTING)
+        umka->error.handler(umka->error.context, "Expression nesting is too deep");
+    
     parseLogicalExpr(umka, type, constant);
 
     // "?"
@@ -3172,6 +3175,8 @@ void parseExpr(Umka *umka, const Type **type, Const *constant)
 
     if ((*type)->kind == TYPE_VOID)
         umka->error.handler(umka->error.context, "Void expression is not allowed");
+
+    umka->gen.exprNesting--;
 }
 
 
